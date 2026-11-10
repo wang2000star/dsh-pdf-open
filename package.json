@@ -1,0 +1,47 @@
+{
+  "name": "dsh-pdf-open",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Open the previewed PDF in the browser's own viewer (rotate, outline, find) from a DeepSeek Harness document preview, with Range streaming for headless servers.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wang2000star/dsh-pdf-open.git"
+  },
+  "homepage": "https://github.com/wang2000star/dsh-pdf-open#readme",
+  "bugs": {
+    "url": "https://github.com/wang2000star/dsh-pdf-open/issues"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "pdf"
+  ],
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-sidebar-documentpreview"
+      ]
+    }
+  },
+  "license": "MIT"
+}

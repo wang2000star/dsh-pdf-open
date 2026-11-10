@@ -1,0 +1,8 @@
+# dsh-pdf-open bundle patch.
+# Adds one header control to the document preview; it opens the same file
+# through the Host's authenticated /api/file route so the browser's native
+# PDF viewer takes over.
+
+- insert:
+    - id: dsh-pdf-open
+      name: 'dsh-pdf-open'
