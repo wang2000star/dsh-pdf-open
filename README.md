@@ -99,6 +99,20 @@ The route handler is a pure fetch function over `ctx.fs`, so the tests run in
 plain Node against a fake filesystem: `200`, `HEAD`, `206`, suffix ranges, `416`,
 malformed ranges, path validation, and filesystem error mapping.
 
+## Implementation notes
+
+- **GET/HEAD exact routes must use `requestBody: 'buffered'`.** The carrier's
+  `streaming` mode wraps the socket in a `Request` with a body; the WHATWG
+  constructor rejects a body for GET/HEAD, the error escapes the handler, and the
+  web server's fallback answers an empty `400` that the browser renders as its
+  own error page. This is the difference from the shipped `/api/file` route.
+- **No `Content-Security-Policy` header.** The shipped file route sends
+  `sandbox; default-src 'none'`. Chromium happens to render PDFs behind that
+  header, but it is a viewer-implementation detail; this route omits it so the
+  viewer is not at the mercy of that behavior.
+- **`Accept-Ranges` is the whole point.** Without it the browser downloads the
+  complete file before the first page paints.
+
 ## License
 
 MIT
