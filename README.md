@@ -58,11 +58,17 @@ instead of opening at all.
 This plugin registers `/api/pdf-open/raw`, which:
 
 - advertises `Accept-Ranges: bytes` and answers `Range` with `206`;
-- reads only the requested window through `ctx.fs.readByteRange`, so the server
-  never buffers the whole file;
+- reads only the requested window through `ctx.fs.readByteRange`, so a bounded
+  request never buffers the whole file;
 - serves `application/pdf` with `Content-Disposition: inline` and no
   restrictive CSP, so the browser viewer takes over;
 - caps one file at 512 MiB.
+
+An `open-ended` request (`Range: bytes=0-`) still yields the whole remainder in
+one response, which is what a viewer asks for before it knows the page offsets.
+The win is that linearized PDFs then load page by page, the byte cap that made
+`/api/file` answer `413` is gone, and the file is read once instead of being
+buffered and copied.
 
 ## Security
 

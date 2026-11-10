@@ -153,7 +153,10 @@ export function apply(ctx) {
       const dispose = ctx.connection.fetch.register({
         path: ROUTE,
         methods: ['GET', 'HEAD'],
-        requestBody: 'streaming',
+        // GET/HEAD carry no body, and the carrier's `streaming` mode builds a
+        // Request with a duplex body, which the WHATWG constructor rejects for
+        // these methods (the carrier then answers an empty 400).
+        requestBody: 'buffered',
         fetch: createPdfRawHandler(ctx.fs),
       })
       return () => {
