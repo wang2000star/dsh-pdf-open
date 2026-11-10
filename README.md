@@ -1,5 +1,7 @@
 # dsh-pdf-open
 
+[![ci](https://github.com/wang2000star/dsh-pdf-open/actions/workflows/ci.yml/badge.svg)](https://github.com/wang2000star/dsh-pdf-open/actions/workflows/ci.yml)
+
 Adds **one button** to the DeepSeek Harness document preview: open the previewed
 PDF in your browser's own PDF viewer.
 
@@ -25,7 +27,19 @@ useless when Harness runs on a headless server.
 
 ## Install
 
-From a checkout of the plugin directory:
+From npm:
+
+```sh
+dsh plugin --profile web add dsh-pdf-open
+```
+
+Straight from this repository (no build step — the sources are the runtime files):
+
+```sh
+dsh plugin --profile web add github:wang2000star/dsh-pdf-open
+```
+
+From a local checkout:
 
 ```sh
 dsh plugin --profile web add /absolute/path/to/dsh-pdf-open
