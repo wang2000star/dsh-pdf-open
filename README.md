@@ -69,6 +69,20 @@ them the whole file must arrive before the first page paints, which is painful
 on a remote server, and files above the route's byte cap fail with `413`
 instead of opening at all.
 
+Measured on one deployment, for a 56 MB, 14-page PDF over the authenticated
+`/api` channel:
+
+| Request | Result |
+|---|---|
+| `GET /api/file?path=…` (shipped) | `413 Payload Too Large`, 12-byte body |
+| `GET /api/pdf-open/raw?path=…` | `200`, 58,809,929 bytes, `Accept-Ranges: bytes` |
+| `Range: bytes=0-262143` | `206`, 262,144 bytes in 8 ms |
+| `Range: bytes=50000000-` | `206`, `Content-Range: bytes 50000000-58809928/58809929` |
+| `Range: bytes=99999999-` | `416`, `Content-Range: bytes */58809929` |
+
+So the shipped route does not merely feel slow for files of this size: it refuses
+them. That is what this route fixes.
+
 This plugin registers `/api/pdf-open/raw`, which:
 
 - advertises `Accept-Ranges: bytes` and answers `Range` with `206`;
